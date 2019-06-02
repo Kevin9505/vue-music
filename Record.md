@@ -133,7 +133,7 @@ import originJSONP from 'jsonp'
  * @param {Object} option jsonp 的配置项
  * @return Promise
  **/
-export default class jsonp (url, data, option) {
+export const jsonp = (url, data, option) => {
   // 拼接 url
   url += (url.includes('?') ? '&' : '?') + param(data)
 
@@ -162,12 +162,17 @@ const param = (data) => {
     // 判断是否为空, 取出值
     let value = data[key] !== undefined ? data[key] : ''
     // 拼接参数
-    url += `&${k}=${encodeURIComponent(value)}`
+    url += `&${key}=${encodeURIComponent(value)}`
   }
   // 返回去掉 首个字符
   return url ? url.substring(1) : ''
 }
 
 ```
+
+# 3. js 常用方法
+|方法名|描述|用法|
+|---|---|---|
+|join|用于把数组中的所有元素放入一个字符串|11|
 
 
