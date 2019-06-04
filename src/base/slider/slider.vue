@@ -56,6 +56,12 @@ export default {
       this.slider.refresh()
     })
   },
+  
+  activated() { // keep-alive 组件激活时调用。
+    if (this.autoPlay) {
+      this._play()
+    }
+  },
 
   methods: {
     /**
@@ -147,6 +153,14 @@ export default {
       }, this.initerval)
     }
   },
+
+  deactivated() { // keep-alive 组件停用时调用。
+    clearTimeout(this.timer)
+  },
+
+  beforeDestroy() {
+    clearTimeout(this.timer)
+  }
 }
 </script>
 
