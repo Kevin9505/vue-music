@@ -179,4 +179,5 @@ const param = (data) => {
 |includes()|用来判断一个数组是否包含一个指定的值，如果是返回 true，否则false。|arr.includes(searchElement, fromIndex)|searchElement，必须。需要查找的元素值。<br>fromIndex，可选。从该索引处开始查找 searchElement。如果为负值，则按升序从 array.length + fromIndex 的索引开始搜索。默认为 0。|布尔值。如果找到指定值返回 true，否则返回 false。|
 |substring()|用于提取字符串中介于两个指定下标之间的字符。|stringObject.substring(start,stop)|start，必需。一个非负的整数，规定要提取的子串的第一个字符在 stringObject 中的位置。<br>stop，可选。一个非负的整数，比要提取的子串的最后一个字符在 stringObject 中的位置多 1。如果省略该参数，那么返回的子串会一直到字符串的结尾。|一个新的字符串，该字符串值包含 stringObject 的一个子字符串，其内容是从 start 处到 stop-1 处的所有字符，其长度为 stop 减 start。<br>substring() 方法返回的子串包括 start 处的字符，但不包括 stop 处的字符。|
 
-
+# 4. 去掉项目中的 eslint 检测
+` 在 package.json 文件中 找到 "extends" 删除 "eslint: ' '" 项即可. `
