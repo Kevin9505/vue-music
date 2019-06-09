@@ -178,6 +178,35 @@ const param = (data) => {
 |split()|用于把一个字符串分割成字符串数组。|stringObject.split(separator,howmany)|separator，必需。字符串或正则表达式，从该参数指定的地方分割 stringObject。<br>howmany，可选。该参数可指定返回的数组的最大长度。如果设置了该参数，返回的子串不会多于这个参数指定的数组。如果没有设置该参数，整个字符串都会被分割，不考虑它的长度。|一个字符串数组，该数组是通过在 separator 指定的边界处将字符串 stringObject 分割成子串创建的。返回的数组中的字串不包括 separator 自身。|
 |includes()|用来判断一个数组是否包含一个指定的值，如果是返回 true，否则false。|arr.includes(searchElement, fromIndex)|searchElement，必须。需要查找的元素值。<br>fromIndex，可选。从该索引处开始查找 searchElement。如果为负值，则按升序从 array.length + fromIndex 的索引开始搜索。默认为 0。|布尔值。如果找到指定值返回 true，否则返回 false。|
 |substring()|用于提取字符串中介于两个指定下标之间的字符。|stringObject.substring(start,stop)|start，必需。一个非负的整数，规定要提取的子串的第一个字符在 stringObject 中的位置。<br>stop，可选。一个非负的整数，比要提取的子串的最后一个字符在 stringObject 中的位置多 1。如果省略该参数，那么返回的子串会一直到字符串的结尾。|一个新的字符串，该字符串值包含 stringObject 的一个子字符串，其内容是从 start 处到 stop-1 处的所有字符，其长度为 stop 减 start。<br>substring() 方法返回的子串包括 start 处的字符，但不包括 stop 处的字符。|
+|Object.assign()|用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。|Object.assign(target, ...sources)|target，目标对象。<br>sources，源对象。|目标对象。|
 
 # 4. 去掉项目中的 eslint 检测
 ` 在 package.json 文件中 找到 "extends" 删除 "eslint: ' '" 项即可. `
+
+# 5. 利用 vue-lazyload 插件实现图片懒加载
+1. 安装 `vue-lazyload` 插件 `yarn add vue-lazyload --save` 或 `npm install vue-lazyload --save`
+2. 在 `main.js` 文件中引用，代码如下：
+```js
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import VueLazyload from 'vue-lazyload'
+
+Vue.use(VueLazyload, {
+  error: require('dist/error.png'), // 加载失败时显示的图片
+  loading: require('dist/loading.gif'), // 预先显示的图片
+  attempt: 1, // 尝试计数
+})
+
+new Vue({
+  render: h => h(App),
+  router
+}).$mount('#app')
+```
+3. 然后在你需要懒加载图片的地方使用
+```html
+<template>
+  <img width="60" height="60" v-lazy="请求的图片地址" alt="">
+</template>
+```
+4. 具体API，查看[vue-lazyload  github官方网站](https://github.com/hilongjw/vue-lazyload)
