@@ -1,6 +1,10 @@
 import {jsonp} from '@/common/js/jsonp'
 import { commonParams, options } from './config'
+import axios from 'axios'
 
+/**
+ * 封装一个获取 推荐页面数据的方法
+ */
 export const getRecommend = () => {
   const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg'
 
