@@ -179,6 +179,10 @@ const param = (data) => {
 |includes()|用来判断一个数组是否包含一个指定的值，如果是返回 true，否则false。|arr.includes(searchElement, fromIndex)|searchElement，必须。需要查找的元素值。<br>fromIndex，可选。从该索引处开始查找 searchElement。如果为负值，则按升序从 array.length + fromIndex 的索引开始搜索。默认为 0。|布尔值。如果找到指定值返回 true，否则返回 false。|
 |substring()|用于提取字符串中介于两个指定下标之间的字符。|stringObject.substring(start,stop)|start，必需。一个非负的整数，规定要提取的子串的第一个字符在 stringObject 中的位置。<br>stop，可选。一个非负的整数，比要提取的子串的最后一个字符在 stringObject 中的位置多 1。如果省略该参数，那么返回的子串会一直到字符串的结尾。|一个新的字符串，该字符串值包含 stringObject 的一个子字符串，其内容是从 start 处到 stop-1 处的所有字符，其长度为 stop 减 start。<br>substring() 方法返回的子串包括 start 处的字符，但不包括 stop 处的字符。|
 |Object.assign()|用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。|Object.assign(target, ...sources)|target，目标对象。<br>sources，源对象。|目标对象。|
+|forEach()|用于调用数组的每个元素，并将元素传递给回调函数|array.forEach((currentValue, index, arr) => {}, thisValue)|(currentValue, index, arr) => {}，必需。 数组中每个元素需要调用的函数。<br>currentValue，必需。当前元素；<br>index，可选。当前元素的索引值。<br>arr，可选。当前元素所属的数组对象。<br>thisValue，可选。传递给函数的值一般用 "this" 值。如果这个参数为空， "undefined" 会传递给 "this" 值|undefined|
+|match()|可在字符串内检索指定的值，或找到一个或多个正则表达式的匹配|stringObject.match(searchvalue)<br>stringObject.match(regexp)|searchvalue，必需。规定要检索的字符串值。<br>regexp，必需。规定要匹配的模式的 RegExp 对象。如果该参数不是 RegExp 对象，则需要首先把它传递给 RegExp 构造函数，将其转换为 RegExp 对象。|存放匹配结果的数组。该数组的内容依赖于 regexp 是否具有全局标志 g。[详细介绍](http://www.w3school.com.cn/jsref/jsref_match.asp)|
+|concat()|用于连接两个或多个数组。|arrayObject.concat(arrayX,arrayX,......,arrayX)|arrayX，必需。该参数可以是具体的值，也可以是数组对象。可以是任意多个。|返回一个新的数组。该数组是通过把所有 arrayX 参数添加到 arrayObject 中生成的。如果要进行 concat() 操作的参数是数组，那么添加的是数组中的元素，而不是数组。|
+|charCodeAt()|可返回指定位置的字符的 Unicode 编码。这个返回值是 0 - 65535 之间的整数。|stringObject.charCodeAt(index)|index，必需。表示字符串中某个位置的数字，即字符在字符串中的下标。|返回的是位于指定位置的字符的编码；<br>字符串中第一个字符的下标是 0。如果 index 是负数，或大于等于字符串的长度，则 charCodeAt() 返回 NaN。|
 
 # 4. 去掉项目中的 eslint 检测
 ` 在 package.json 文件中 找到 "extends" 删除 "eslint: ' '" 项即可. `
