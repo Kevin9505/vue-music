@@ -21,3 +21,17 @@ export const addClass = (el, className) => {
   // join() 方法用于把数组中的所有元素放入一个字符串。
   el.className = newClass.join(' ')
 }
+
+/**
+ * 一个获取设置自定义属性值
+ * @param {*} el 当前点击的标签元素
+ * @param {*} name 自定义属性
+ * @param {*} val 值
+ */
+export const getData = (el, name, val) => {
+  const prefix = 'data-'
+  if (val) {
+    return el.setAttribute(prefix + name, val)
+  }
+  return el.getAttribute(prefix + name)
+}
