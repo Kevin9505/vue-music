@@ -20,6 +20,7 @@
             class="list-group-item"
             v-for="item in group.items"
             :key="item.id"
+            @click="selectedSinger(item)"
           >
             <img class="avatar" v-lazy="item.avatar" :alt="item.name">
             <span class="name">{{item.name}}</span>
@@ -153,6 +154,9 @@ export default {
   },
 
   methods: {
+    selectedSinger(item) {
+      this.$emit('select', item)
+    },
     /**
      * 手指触摸开始时触发的方法
      * @param {*} e 事件源
@@ -251,7 +255,7 @@ export default {
   width: 100%
   height: 100%
   overflow: hidden
-  background: $color-backgroud
+  background: $color-background
   .list-group
     padding-bottom: 30px
     .list-group-title
