@@ -35,3 +35,37 @@ export const getData = (el, name, val) => {
   }
   return el.getAttribute(prefix + name)
 }
+
+// 全部的标签样式
+let elementStyle = document.createElement('div').style
+// 浏览器供应商的前缀
+let vendor = (() => {
+  let transformNames = {
+    webkit: 'webkitTransform',
+    Moz: 'MozTransform',
+    O: 'OTransform',
+    ms: 'msTransform',
+    standard: 'transform'
+  }
+
+  // 循环遍历数据,找出当前浏览器的供应商前缀
+  for (let key in transformNames) {
+    if (elementStyle[transformNames[key]] !== undefined) {
+      return key
+    }
+  }
+
+  return false
+})()
+
+/**
+ * 一个给样式添加浏览器供应商前缀的方法
+ * @param {*} style 样式的属性名
+ */
+export const prefixStyle = (style) => {
+  if (vendor === false) return false
+
+  if (vendor === 'standard') return style
+
+  return vendor + style.charAt(0).toUpperCase() + style.substr(1)
+}
