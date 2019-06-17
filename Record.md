@@ -183,6 +183,15 @@ const param = (data) => {
 |match()|可在字符串内检索指定的值，或找到一个或多个正则表达式的匹配|stringObject.match(searchvalue)<br>stringObject.match(regexp)|searchvalue，必需。规定要检索的字符串值。<br>regexp，必需。规定要匹配的模式的 RegExp 对象。如果该参数不是 RegExp 对象，则需要首先把它传递给 RegExp 构造函数，将其转换为 RegExp 对象。|存放匹配结果的数组。该数组的内容依赖于 regexp 是否具有全局标志 g。[详细介绍](http://www.w3school.com.cn/jsref/jsref_match.asp)|
 |concat()|用于连接两个或多个数组。|arrayObject.concat(arrayX,arrayX,......,arrayX)|arrayX，必需。该参数可以是具体的值，也可以是数组对象。可以是任意多个。|返回一个新的数组。该数组是通过把所有 arrayX 参数添加到 arrayObject 中生成的。如果要进行 concat() 操作的参数是数组，那么添加的是数组中的元素，而不是数组。|
 |charCodeAt()|可返回指定位置的字符的 Unicode 编码。这个返回值是 0 - 65535 之间的整数。|stringObject.charCodeAt(index)|index，必需。表示字符串中某个位置的数字，即字符在字符串中的下标。|返回的是位于指定位置的字符的编码；<br>字符串中第一个字符的下标是 0。如果 index 是负数，或大于等于字符串的长度，则 charCodeAt() 返回 NaN。|
+|Math.max()|返回一组数中的最大值|Math.max(value1[,value2, ...])|value1, value2, ...，一组数值|返回给定的一组数字中的最大值。如果给定的参数中至少有一个参数无法被转换成数字，则会返回 NaN|
+|Math.min()|返回零个或更多个数值的最小值|Math.min([value1[,value2, ...]])|value1, value2, ...一组数值|给定数值中最小的数。如果任一参数不能转换为数值，则返回NaN。|
+|Math.floor()|返回小于或等于一个给定数字的最大整数。<br>Math.floor() === 向下取整|Math.floor(x) | x，一个数字。|一个表示小于或等于指定数字的最大整数的数字|
+|Math.ceil()|返回大于或等于一个给定数字的最小整数。<br>Math.ceil() === 向上取整|Math.ceil(x) |x，一个数值|大于或等于给定数字的最小整数|
+|Math.random()|函数返回一个浮点,  伪随机数在范围[0，1)，<br>也就是说，从0（包括0）往上，但是不包括1（排除1），然后您可以缩放到所需的范围。<br>实现将初始种子选择到随机数生成算法;<br>它不能被用户选择或重置。|Math.random()|-|一个浮点型伪随机数字，在0（包括0）和1（不包括）之间。|
+|Math.abs()|函数返回指定数字 “x“ 的绝对值|Math.abs(x);|x，一个数值|传入一个非数字形式的字符串或者 undefined/empty 变量，将返回 NaN。传入 null 将返回 0。|
+|charAt()|可返回指定位置的字符|stringObject.charAt(index)|index	必需。表示字符串中某个位置的数字，即字符在字符串中的下标。|返回指定位置的字符<br>字符串中第一个字符的下标是 0。如果参数 index 不在 0 与 string.length 之间，该方法将返回一个空字符串。|
+|toUpperCase()|用于把字符串转换为大写|stringObject.toUpperCase()|-|一个新的字符串，在其中 stringObject 的所有小写字符全部被转换为了大写字符|
+|substr()|可在字符串中抽取从 start 下标开始的指定数目的字符。|stringObject.substr(start,length)|start	必需。要抽取的子串的起始下标。必须是数值。如果是负数，那么该参数声明从字符串的尾部开始算起的位置。也就是说，-1 指字符串中最后一个字符，-2 指倒数第二个字符，以此类推。<br><br>length	可选。子串中的字符数。必须是数值。如果省略了该参数，那么返回从 stringObject 的开始位置到结尾的字串。|一个新的字符串，包含从 stringObject 的 start（包括 start 所指的字符） 处开始的 length 个字符。如果没有指定 length，那么返回的字符串包含从 start 到 stringObject 的结尾的字符。|
 
 # 4. 去掉项目中的 eslint 检测
 ` 在 package.json 文件中 找到 "extends" 删除 "eslint: ' '" 项即可. `
