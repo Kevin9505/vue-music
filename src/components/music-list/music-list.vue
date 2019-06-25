@@ -31,7 +31,7 @@
       ref="list"
     >
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list :songs="songs" @select="selectedMusicItem"></song-list>
       </div>
       <div class="loading-container" v-show="!songs.length">
         <loading></loading>
@@ -45,6 +45,7 @@ import Scroll from '@/base/scroll/scroll'
 import SongList from '@/base/song-list/song-list'
 import Loading from '@/base/loading/loading'
 import {prefixStyle} from '@/common/js/dom'
+import {mapActions} from 'vuex'
 
 
 const RESERVED_HEIGHT = 40
@@ -81,13 +82,15 @@ export default {
      * 监听滚动组件在 Y 轴的滚动
      */
     scrollY(newVal) {
+      // 计算当前在 Y 轴上的滚动的最大值
       let translateY = Math.max(this.minTranslateY, newVal)
-      console.log(this.minTranslateY)
       let zIndex = 0
       let scale = 1
       let blur = 0
 
+      // 当前头图缩放比例
       const percent = Math.abs(newVal / this.imageHeight)
+      // 当往下继续拖拽时
       if (newVal > 0) {
         scale = 1 + percent
         zIndex = 10
@@ -95,8 +98,10 @@ export default {
         blur = Math.min(20, percent * 20)
       }
 
+      // 更改对应标签的样式
       this.$refs.layer.style[transform] = `translate3d(0, ${translateY}px, 0)`
       this.$refs.filter.style[backdrop] = `blur(${blur}px)`
+      // 当往上滑动时
       if (newVal < this.minTranslateY) {
         zIndex = 10
         this.$refs.bgImage.style.paddingTop = 0
@@ -143,9 +148,25 @@ export default {
       this.$router.back()
     },
 
+    /**
+     * 选择歌曲播放的的方法
+     */
+    selectedMusicItem(item, index) {
+      this.selectPlay({
+        list: this.songs,
+        index
+      })
+    },
+
+    /**
+     * 在 Y 轴上滚动触发的方法
+     */
     scroll(pos) {
       this.scrollY = pos.y
-    }
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   },
 
   components: {
