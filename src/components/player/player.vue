@@ -21,7 +21,7 @@
         <div class="middle">
           <div class="middle-l">
             <div class="cd-wrapper" ref="cdWrapper">
-              <div class="cd">
+              <div class="cd" :class="cdCls">
                 <img class="image" :src="currentSong.image" :alt="currentSong.id">
               </div>
             </div>
@@ -51,14 +51,14 @@
             <div class="icon i-left">
               <i class="icon-sequence"></i>
             </div>
-            <div class="icon i-left">
-              <i class="icon-prev"></i>
+            <div class="icon i-left" :class="disableCls">
+              <i class="icon-prev" @click="prevSong"></i>
             </div>
-            <div class="icon i-center">
-              <i class="icon-pause"></i>
+            <div class="icon i-center" :class="disableCls">
+              <i :class="playIcon" @click="togglePlaying"></i>
             </div>
-            <div class="icon i-right">
-              <i class="icon-next"></i>
+            <div class="icon i-right" :class="disableCls">
+              <i class="icon-next" @click="nextSong"></i>
             </div>
             <div class="icon i-right">
               <i class="icon-not-favorite"></i>
@@ -70,20 +70,21 @@
     <transition name="mini">
       <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="icon">
-          <img width="40" height="40" :src="currentSong.image" :alt="currentSong.id">
+          <img width="40" height="40" :class="cdCls" :src="currentSong.image" :alt="currentSong.id">
         </div>
         <div class="text">
           <h2 class="name" v-html="currentSong.name"></h2>
           <p class="desc" v-html="currentSong.singer"></p>
         </div>
         <div class="control">
-          <i class="icon-play-mini"></i>
+          <i :class="miniPlayIcon" @click.stop="togglePlaying"></i>
         </div>
         <div class="control">
           <i class="icon-playlist"></i>
         </div>
       </div>
     </transition>
+    <audio ref="audio" :src="currentSong.url" @play="readPlay" @error="playError"></audio>
   </div>
 </template>
 
@@ -97,15 +98,67 @@ const transform = prefixStyle('transform')
 export default {
   name: 'player',
 
+  data() {
+    return {
+      hadReadPlay: false
+    }
+  },
+
   computed: {
+    /**
+     * 计算中间 cd 的旋转样式
+     */
+    cdCls() {
+      return this.playing ? 'play' : 'play pause'
+    },
+    /**
+     * 计算全屏的播放按钮样式
+     */
+    playIcon() {
+      return this.playing ? 'icon-pause' : 'icon-play'
+    },
+    /**
+     * 计算小屏的播放按钮样式
+     */
+    miniPlayIcon() {
+      return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+    },
+    disableCls() {
+      return this.hadReadPlay ? '' : 'disable'
+    },
     ...mapGetters([
       'currentSong',
       'fullScreen',
-      'playing'
+      'playing',
+      'currentIndex',
+      'playlist'
     ])
   },
 
   watch: {
+    /**
+     * 监听当前播放歌曲的变化
+     */
+    currentSong() {
+      this.$nextTick(() => {
+        this.$refs.audio.play()
+      })
+    },
+    /**
+     * 监听当前的播放状态
+     */
+    playing() {
+      const audio = this.$refs.audio
+      const playPromise = audio.play()
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          console.log(playPromise)
+          this.$nextTick(() => {
+            this.playing ? audio.play() : audio.pause()
+          })
+        })
+      }
+    }
   },
 
   methods: {
@@ -180,6 +233,66 @@ export default {
       this.$refs.cdWrapper.style[transform] = ''
     },
     /**
+     * 点击切换播放暂停歌曲事件
+     */
+    togglePlaying() {
+      this.setPlayingState(!this.playing)
+    },
+    /**
+     * 上一首歌曲的方法
+     */
+    prevSong() {
+      // 当当前播放歌曲未准备好前不会执行后面的逻辑
+      if (!this.hadReadPlay) return
+      // 上一首歌曲的索引
+      let index = this.currentIndex - 1
+      // 判断当前歌曲是否为第一条
+      if (index === -1) {
+        index = this.playlist.length - 1
+      }
+      // 利用 vuex 设置当前索引
+      this.setCurrentIndex(index)
+      // 判断当前歌曲正在播放时,切换图标
+      if (!this.playing) {
+        this.togglePlaying()
+      }
+      // 将 歌曲准备好的变量值改为 false
+      this.hadReadPlay = false
+    },
+    /**
+     * 下一首歌曲的方法
+     */
+    nextSong() {
+      // 当当前播放歌曲未准备好前不会执行后面的逻辑
+      if (!this.hadReadPlay) return false
+      // 下一首歌曲的索引
+      let index = this.currentIndex + 1
+      // 判断当前歌曲是否为列表中的最后一条
+      if (index === this.playlist.length) {
+        index = 0
+      }
+      // 利用 vuex 设置当前索引
+      this.setCurrentIndex(index)
+      // 判断当前歌曲正在播放时,切换图标
+      if (!this.playing) {
+        this.togglePlaying()
+      }
+      // 将 歌曲准备好的变量值改为 false
+      this.hadReadPlay = false
+    },
+    /**
+     * 歌曲准备好后执行的方法 audio 标签的内置方法
+     */
+    readPlay() {
+      this.hadReadPlay = true
+    },
+    /**
+     * 歌曲播放错误执行的方法
+     */
+    playError() {
+      this.hadReadPlay = true
+    },
+    /**
      * 获取唱片移动的位置
      */
     _getPosAndScale() {
@@ -206,7 +319,9 @@ export default {
       }
     },
     ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN'
+      setFullScreen: 'SET_FULL_SCREEN',
+      setPlayingState: 'SET_PLAYING_STATE',
+      setCurrentIndex: 'SET_CURRENT_INDEX'
     })
   }
 }
