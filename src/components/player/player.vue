@@ -43,9 +43,11 @@
             <span class="dot"></span>
           </div>
           <div class="progress-wrapper">
-            <span class="time time-l"></span>
-            <div class="progress-bar-wrapper"></div>
-            <span class="titme titme-r"></span>
+            <span class="time time-l">{{formatTime(currentTime)}}</span>
+            <div class="progress-bar-wrapper">
+              <progress-bar @percentChange="progressBarChangeByPercent"></progress-bar>
+            </div>
+            <span class="time time-r">{{formatTime(currentSong.duration)}}</span>
           </div>
           <div class="operators">
             <div class="icon i-left">
@@ -84,11 +86,12 @@
         </div>
       </div>
     </transition>
-    <audio ref="audio" :src="currentSong.url" @play="readPlay" @error="playError"></audio>
+    <audio ref="audio" :src="currentSong.url" @play="readPlay" @error="playError" @timeupdate="updatePlayTime"></audio>
   </div>
 </template>
 
 <script>
+import ProgressBar from '@/base/progress-bar/progress-bar'
 import {mapGetters, mapMutations} from 'vuex'
 import animations from 'create-keyframe-animation'
 import {prefixStyle} from '@/common/js/dom'
@@ -100,7 +103,8 @@ export default {
 
   data() {
     return {
-      hadReadPlay: false
+      hadReadPlay: false, // 当前歌曲是否准备好
+      currentTime: 0 // 当前播放的进度时间
     }
   },
 
@@ -293,6 +297,45 @@ export default {
       this.hadReadPlay = true
     },
     /**
+     * 音乐播放时间进度
+     */
+    updatePlayTime(e) {
+      this.currentTime = e.target.currentTime
+    },
+    /**
+     * 时间格式化的方法
+     */
+    formatTime(interval) {
+      interval = interval | 0
+      const minute = interval / 60 | 0
+      const second = this._pad(interval % 60)
+      return `${minute}:${second}`
+    },
+    /**
+     * 根据拖动进度条改变当前播放时间的方法
+     * @param {*} percent 当前拖动的比率
+     */
+    progressBarChangeByPercent(percent) {
+      const currentTime = this.currentSong.duration * percent
+      this.$refs.audio.currentTime = currentTime
+      if (!this.playing) {
+        this.togglePlaying()
+      }
+    },
+    /**
+     * 一个根据 n 给 num 补充的方法
+     * @param {*} num 当前需要操作的值
+     * @param {*} n 当前需要补充的长度
+     */
+    _pad(num, n = 2) {
+      let len = num.toString().length
+      while (len < n) {
+        num = '0' + num
+        len++
+      }
+      return num
+    },
+    /**
      * 获取唱片移动的位置
      */
     _getPosAndScale() {
@@ -323,6 +366,9 @@ export default {
       setPlayingState: 'SET_PLAYING_STATE',
       setCurrentIndex: 'SET_CURRENT_INDEX'
     })
+  },
+  components: {
+    ProgressBar
   }
 }
 </script>
@@ -475,7 +521,7 @@ export default {
             text-align: left
           &.time-r
             text-align: right
-        .progess-bar-wrapper
+        .progress-bar-wrapper
           flex: 1
       .operators
         display: flex
